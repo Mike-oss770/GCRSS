@@ -1,4 +1,4 @@
-"""Frozen reusable-ranking Stage-I frontend used by GCRSS.
+"""Shared ranking construction frontend used by GCRSS.
 
 Only the ranking constants and the minimal frontend wrapper are included in
 this code release.  No baseline, evaluator, dataset, or benchmark runner is

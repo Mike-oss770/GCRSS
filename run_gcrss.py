@@ -1,7 +1,7 @@
-"""Canonical, frozen GCRSS selector entry point.
+"""Canonical GCRSS selector entry point.
 
-This module wraps the already verified stage-2 primitives. It does not duplicate
-or modify the feature-selection algorithm.
+This module combines shared ranking construction with budget-conditioned subset
+realization. It does not duplicate or modify the feature-selection algorithm.
 """
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ CANDIDATE_POOL_SIZE = 500
 GRAPH_SCALES = (8, 12, 16)
 REFERENCE_SCALE = 12
 FROZEN_CONFIG = {
-    "method": "GCRSS-RelTrust-2Swap",
+    "method": "GCRSS",
     "initialization": "frozen reusable ranking top-m",
     "candidate_pool": "frozen reusable ranking top-500",
     "epsilon_rel": EPSILON_REL,
@@ -47,9 +47,8 @@ def assert_frozen_config() -> dict:
 def select_from_frozen_ranking(frontend, m: int):
     """Select features from one frozen reusable-ranking frontend.
 
-    The guard on structural risk closes the audited abs/floor ambiguity: on the
-    verified positive-risk domain this is identical to the formal runner, while
-    unsupported values fail instead of silently changing the relative constraint.
+    The guard ensures that the paper's relative structural-consistency constraint
+    is well-defined; unsupported values fail instead of silently changing it.
     """
     assert_frozen_config()
     ranking = np.asarray(frontend.reusable_ranking, dtype=np.int64)
@@ -65,7 +64,7 @@ def select_from_frozen_ranking(frontend, m: int):
     initial = np.arange(m, dtype=np.int64)
     base = structural_profiles(ap, initial)
     if not np.isfinite(base) or base <= 0:
-        raise ValueError("relative trust region requires finite positive structural risk")
+        raise ValueError("relative constraint requires finite positive g(S0)")
     epsilon = EPSILON_REL * base
     selected, swaps, _, limit = trust_swap(
         ap, cp, initial, epsilon, max_iter=MAX_SWAPS, feature_ids=pool

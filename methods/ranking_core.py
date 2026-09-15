@@ -2,7 +2,7 @@
 
 This module intentionally contains no benchmark runner, baseline, evaluator,
 dataset, or result code.  It exposes only the train-matrix operations needed
-to build the reusable ranking consumed by GCRSS-RelTrust-2Swap.
+to build the reusable ranking consumed by GCRSS.
 """
 
 from __future__ import annotations

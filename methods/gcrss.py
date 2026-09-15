@@ -1,4 +1,4 @@
-"""Compatibility adapter exposing frozen reusable-ranking data to stage-2 GCRSS."""
+"""Adapter exposing shared-ranking data to budget-conditioned realization."""
 from __future__ import annotations
 
 from dataclasses import dataclass

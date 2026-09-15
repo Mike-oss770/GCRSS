@@ -1,9 +1,9 @@
-"""Final RelTrust-2Swap refinement for GCRSS.
+"""Budget-conditioned subset realization for GCRSS.
 
 The selector starts from the reusable-ranking top-m prefix. It then evaluates exact
 one-for-one exchanges inside the frozen candidate pool, accepting only the
 best deterministic redundancy improvement that satisfies the relative
-structural trust constraint. At most two swaps are accepted.
+structural-consistency constraint. At most two swaps are accepted.
 """
 
 from __future__ import annotations
@@ -18,7 +18,7 @@ Q0 = K_SET.index(REFERENCE_K)
 
 
 def structural_profiles(ap, subset, alpha=ALPHA, tau=TAU):
-    """Evaluate the robust multi-scale structural risk of one subset."""
+    """Evaluate the structural-consistency cost g(S) of one subset."""
 
     p = ap[np.asarray(subset, dtype=int)].mean(0)
     robust = float(tau * (logsumexp(p / tau) - np.log(p.size)))
@@ -44,7 +44,7 @@ def trust_swap(
     tol=1e-12,
     feature_ids=None,
 ):
-    """Perform deterministic best-improvement 1-for-1 swaps under trust region.
+    """Perform deterministic best-improvement 1-for-1 exchanges under Eq. (8).
 
     Parameters are label-free: ``ap`` is the candidate structural profile
     matrix, ``cp`` is the candidate correlation matrix, and ``s0`` is the
